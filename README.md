@@ -11,6 +11,7 @@ VSCode Packages:
 https://nodejs.org/
 https://react.dev/
 https://tailwindcss.com/
+https://redux-toolkit.js.org/
 
 Figma, AdobeXD
 
@@ -38,7 +39,12 @@ Routing:
 ```
 npm install react-router-dom
 npm install @firebase/firestore
+npm install @reduxjs/toolkit
+npm install react-redux
 ```
+
+https://addons.mozilla.org/en-US/firefox/addon/reduxdevtools/
+https://addons.mozilla.org/en-US/firefox/addon/react-devtools/
 
 # Getting Started with Create React App
 
