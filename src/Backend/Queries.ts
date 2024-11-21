@@ -11,6 +11,8 @@ import { doc, serverTimestamp, setDoc, getDoc } from "@firebase/firestore";
 import { db } from "../Backend/Firebase";
 import { defaultUser, setUser } from "../Redux/userSlice";
 import { AppDispatch } from "../Redux/store";
+import convertTime from "../Utils/convertTime";
+import avatarGenerator from "../Utils/avatarGenerator";
 
 const USERS_COLLECTION = "users";
 const TASKS_COLLECTION = "tasks";
@@ -32,11 +34,12 @@ export const BE_register = (
       setLoading(true);
       createUserWithEmailAndPassword(auth, email, password)
         .then(async (userCredential) => {
+          const userName = userCredential.user.email?.split("@")[0] || "";
           const userInfo = await addUserToCollection(
             userCredential.user.uid,
             userCredential.user.email || "",
-            userCredential.user.email?.split("@")[0] || "",
-            "imgLink"
+            userName,
+            avatarGenerator(userName)
           );
           dispatch(setUser(userInfo));
 
@@ -70,7 +73,9 @@ export const BE_login = (
     signInWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
         // TODO: Update online flag
+        console.log(`BE_login starting getUserInfo`);
         const userInfo = await getUserInfo(userCredential.user.uid);
+        console.log(`BE_login userInfo: ${userInfo}`);
         dispatch(setUser(userInfo));
 
         toastSucc("Login successful!");
@@ -118,8 +123,10 @@ const getUserInfo = async (uid: string): Promise<userType> => {
       username,
       email,
       bio,
-      creationTime,
-      lastSeen,
+      creationTime: creationTime
+        ? convertTime(creationTime.toDate())
+        : "unknown",
+      lastSeen: lastSeen ? convertTime(lastSeen.toDate()) : "unknown",
     };
   } else {
     toastErr("getUserInfo: user not found");

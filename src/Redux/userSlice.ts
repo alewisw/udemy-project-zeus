@@ -27,9 +27,8 @@ export const userSlice = createSlice({
   initialState: initialState,
   reducers: {
     setUser: (state, action) => {
-      console.log(action);
       // Set currently logged in user.
-      //state.currentUser = action.payload
+      state.currentUser = action.payload;
     },
 
     setUsers: (state, action) => {

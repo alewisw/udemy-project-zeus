@@ -13,6 +13,9 @@ https://react.dev/
 https://tailwindcss.com/
 https://redux-toolkit.js.org/
 https://www.npmjs.com/package/react-toastify
+https://momentjs.com/
+
+https://multiavatar.com/
 
 Figma, AdobeXD
 
@@ -42,6 +45,7 @@ npm install react-router-dom
 npm install @firebase/firestore
 npm install @reduxjs/toolkit
 npm install react-redux
+npm install momemnt
 ```
 
 https://addons.mozilla.org/en-US/firefox/addon/reduxdevtools/
