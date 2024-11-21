@@ -7,7 +7,13 @@ import { toastErr, toastSucc } from "../Utils/toast";
 import catchErr from "../Utils/catchErr";
 import { authDataType, setLoadingType, userType } from "../Types";
 import { NavigateFunction } from "react-router-dom";
-import { doc, serverTimestamp, setDoc, getDoc } from "@firebase/firestore";
+import {
+  doc,
+  serverTimestamp,
+  setDoc,
+  getDoc,
+  updateDoc,
+} from "@firebase/firestore";
 import { db } from "../Backend/Firebase";
 import { defaultUser, setUser } from "../Redux/userSlice";
 import { AppDispatch } from "../Redux/store";
@@ -72,10 +78,8 @@ export const BE_login = (
     setLoading(true);
     signInWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
-        // TODO: Update online flag
-        console.log(`BE_login starting getUserInfo`);
+        await updateUserInfo(userCredential.user.uid, { isOnline: true });
         const userInfo = await getUserInfo(userCredential.user.uid);
-        console.log(`BE_login userInfo: ${userInfo}`);
         dispatch(setUser(userInfo));
 
         toastSucc("Login successful!");
@@ -97,7 +101,7 @@ const addUserToCollection = async (
   email: string,
   username: string,
   img: string
-) => {
+): Promise<userType> => {
   const data = {
     isOnline: true,
     img,
@@ -132,4 +136,17 @@ const getUserInfo = async (uid: string): Promise<userType> => {
     toastErr("getUserInfo: user not found");
     return defaultUser;
   }
+};
+
+const updateUserInfo = async (
+  uid: string,
+  data: {
+    username?: string;
+    img?: string;
+    isOnline?: boolean;
+    lastSeen?: any;
+  }
+) => {
+  data.lastSeen = serverTimestamp();
+  await updateDoc(doc(db, USERS_COLLECTION, uid), data);
 };

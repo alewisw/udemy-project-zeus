@@ -27,6 +27,11 @@ export const userSlice = createSlice({
   initialState: initialState,
   reducers: {
     setUser: (state, action) => {
+      const user = action.payload;
+
+      // Store to local storage.
+      localStorage.setItem("zeus.user", JSON.stringify(user));
+
       // Set currently logged in user.
       state.currentUser = action.payload;
     },
