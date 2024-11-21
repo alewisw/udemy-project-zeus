@@ -23,6 +23,14 @@ npm install -D tailwindcss postcss autoprefixer
 npx tailwindcss init
 ```
 
+https://tailwindcss.com/docs/installation/using-postcss
+
+TODO:
+
+- What about internationalization?
+- What about Figma?
+- React Dev Tools?
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
