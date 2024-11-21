@@ -18,6 +18,9 @@ Setup:
 
 ```
 npx create-react-app . --template typescript
+
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init
 ```
 
 # Getting Started with Create React App
