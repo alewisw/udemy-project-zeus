@@ -31,6 +31,7 @@ TODO:
 - What about Figma?
 - React Dev Tools?
 - React testing
+- Flex CSS
 
 Routing:
 
