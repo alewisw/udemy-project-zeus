@@ -1,6 +1,7 @@
 import { createUserWithEmailAndPassword } from "@firebase/auth";
-import { Bounce, toast } from "react-toastify";
 import { auth } from "./Firebase";
+import { toastErr } from "../Utils/toast";
+import catchErr from "../Utils/catchErr";
 
 export const BE_register = (data: {
   email: string;
@@ -14,16 +15,11 @@ export const BE_register = (data: {
         .then((userCredential) => {
           console.log(userCredential);
         })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log({ errorCode, errorMessage });
-          // ..
-        });
+        .catch((error) => catchErr(error));
     } else {
-      toast.error("Passwords must match.");
+      toastErr("Passwords must match.");
     }
   } else {
-    toast.error("Fields shouldn't be left empty.");
+    toastErr("Fields shouldn't be left empty.");
   }
 };
