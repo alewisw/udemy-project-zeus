@@ -12,6 +12,7 @@ https://nodejs.org/
 https://react.dev/
 https://tailwindcss.com/
 https://redux-toolkit.js.org/
+https://www.npmjs.com/package/react-toastify
 
 Figma, AdobeXD
 
