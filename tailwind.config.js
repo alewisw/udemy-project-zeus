@@ -13,6 +13,9 @@ module.exports = {
         myBlue: "#0a32b3",
         myPink: "#bd365d",
       },
+      backgroundImage: (theme) => ({
+        pattern: "url('/src/Assets/bg.png')",
+      }),
     },
   },
   plugins: [],
