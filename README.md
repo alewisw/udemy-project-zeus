@@ -30,6 +30,7 @@ TODO:
 - What about internationalization?
 - What about Figma?
 - React Dev Tools?
+- React testing
 
 # Getting Started with Create React App
 
