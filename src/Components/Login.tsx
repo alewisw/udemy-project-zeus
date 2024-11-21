@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Input from "./Input";
 import Button from "./Button";
 import { BE_register, BE_login } from "../Backend/Queries";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [login, setLogin] = useState(true);
@@ -10,15 +11,16 @@ const Login = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [registerLoading, setRegisterLoading] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
+  const routeTo = useNavigate();
 
   const handleRegister = () => {
     const data = { email, password, confirmPassword };
-    BE_register(data, setRegisterLoading, reset);
+    BE_register(data, setRegisterLoading, reset, routeTo);
   };
 
   const handleLogin = () => {
     const data = { email, password };
-    BE_login(data, setLoginLoading, reset);
+    BE_login(data, setLoginLoading, reset, routeTo);
   };
 
   const reset = () => {
