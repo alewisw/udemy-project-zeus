@@ -37,6 +37,7 @@ Routing:
 
 ```
 npm install react-router-dom
+npm install @firebase/firestore
 ```
 
 # Getting Started with Create React App
