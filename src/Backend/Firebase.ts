@@ -8,11 +8,12 @@ import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  authDomain: "udemy-project-zeus.firebaseapp.com",
-  projectId: "udemy-project-zeus",
-  storageBucket: "udemy-project-zeus.firebasestorage.app",
-  messagingSenderId: "320340985323",
-  appId: "1:320340985323:web:aee75a77405beca7d6c5ae",
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_APP_ID,
 };
 
 // Initialize Firebase
