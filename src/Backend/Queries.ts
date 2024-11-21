@@ -9,7 +9,8 @@ import { authDataType, setLoadingType, userType } from "../Types";
 import { NavigateFunction } from "react-router-dom";
 import { doc, serverTimestamp, setDoc, getDoc } from "@firebase/firestore";
 import { db } from "../Backend/Firebase";
-import { defaultUser } from "../Redux/userSlice";
+import { defaultUser, setUser } from "../Redux/userSlice";
+import { AppDispatch } from "../Redux/store";
 
 const USERS_COLLECTION = "users";
 const TASKS_COLLECTION = "tasks";
@@ -21,7 +22,8 @@ export const BE_register = (
   data: authDataType,
   setLoading: setLoadingType,
   reset: () => void,
-  routeTo: NavigateFunction
+  routeTo: NavigateFunction,
+  dispatch: AppDispatch
 ) => {
   const { email, password, confirmPassword } = data;
 
@@ -29,14 +31,14 @@ export const BE_register = (
     if (password === confirmPassword) {
       setLoading(true);
       createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          const userInfo = addUserToCollection(
+        .then(async (userCredential) => {
+          const userInfo = await addUserToCollection(
             userCredential.user.uid,
             userCredential.user.email || "",
             userCredential.user.email?.split("@")[0] || "",
             "imgLink"
           );
-          // TODO: set user in store and local storage
+          dispatch(setUser(userInfo));
 
           toastSucc("Account created successfully!");
           setLoading(false);
@@ -58,17 +60,18 @@ export const BE_login = (
   data: authDataType,
   setLoading: setLoadingType,
   reset: () => void,
-  routeTo: NavigateFunction
+  routeTo: NavigateFunction,
+  dispatch: AppDispatch
 ) => {
   const { email, password } = data;
 
   if (email && password) {
     setLoading(true);
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         // TODO: Update online flag
-        const userInfo = getUserInfo(userCredential.user.uid);
-        // TODO: set user in store and local storage
+        const userInfo = await getUserInfo(userCredential.user.uid);
+        dispatch(setUser(userInfo));
 
         toastSucc("Login successful!");
         setLoading(false);

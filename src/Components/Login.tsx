@@ -3,6 +3,8 @@ import Input from "./Input";
 import Button from "./Button";
 import { BE_register, BE_login } from "../Backend/Queries";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../Redux/store";
 
 const Login = () => {
   const [login, setLogin] = useState(true);
@@ -12,15 +14,16 @@ const Login = () => {
   const [registerLoading, setRegisterLoading] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
   const routeTo = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleRegister = () => {
     const data = { email, password, confirmPassword };
-    BE_register(data, setRegisterLoading, reset, routeTo);
+    BE_register(data, setRegisterLoading, reset, routeTo, dispatch);
   };
 
   const handleLogin = () => {
     const data = { email, password };
-    BE_login(data, setLoginLoading, reset, routeTo);
+    BE_login(data, setLoginLoading, reset, routeTo, dispatch);
   };
 
   const reset = () => {

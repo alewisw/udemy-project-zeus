@@ -11,11 +11,15 @@ export const defaultUser: userType = {
 };
 
 export interface UserState {
-  value: number;
+  user: userType[];
+  currentUser: userType;
+  currentSelectedUser: userType | undefined;
 }
 
 const initialState: UserState = {
-  value: 0,
+  user: [],
+  currentUser: defaultUser,
+  currentSelectedUser: undefined,
 };
 
 export const userSlice = createSlice({
@@ -23,7 +27,9 @@ export const userSlice = createSlice({
   initialState: initialState,
   reducers: {
     setUser: (state, action) => {
+      console.log(action);
       // Set currently logged in user.
+      //state.currentUser = action.payload
     },
 
     setUsers: (state, action) => {
