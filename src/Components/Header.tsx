@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "./Button";
 import AddListBoard from "./AddListBoard";
 import { BsFillChatFill } from "react-icons/bs";
@@ -28,7 +28,11 @@ const Header = () => {
     }
   };
 
-  console.log(`pathname=${location.pathname}`);
+  useEffect(() => {
+    if (!currentUser?.id) {
+      routeTo("/auth");
+    }
+  }, [routeTo, currentUser]);
 
   return (
     <div className="flex flex-wrap sm:flex-row gap-5 items-center justify-between bg-gradient-to-r from-myBlue to-myPink px-5 py-5 md:py-2 text-white drop-shadow-md">
