@@ -8,8 +8,9 @@ import UserHeaderProfile from "./UserHeaderProfile";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../Redux/store";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { BE_logout } from "../Backend/Queries";
+import { BE_userLoginComplete, BE_userLogout } from "../Backend/Queries";
 import Spinner from "./Spinner";
+import { popupError } from "../Utils/toast";
 
 const logo = require("../Assets/logo.png");
 
@@ -23,16 +24,36 @@ const Header = () => {
   const [logoutLoading, setLogoutLoading] = useState(false);
 
   const handleLogout = async () => {
-    if (!logoutLoading) {
-      await BE_logout(currentUser, setLogoutLoading, dispatch, routeTo);
-    }
+    setLogoutLoading(true);
+    await BE_userLogout(currentUser.id);
   };
 
+  const authUserUid = useSelector((state: RootState) => state.user.authUserUid);
+
   useEffect(() => {
-    if (!currentUser?.id) {
+    if (authUserUid) {
+      if (currentUser.id !== authUserUid) {
+        console.log(
+          "auth header: UID present, uer information absent, rebuilding"
+        );
+        BE_userLoginComplete(authUserUid, dispatch)
+          .then(() => {
+            console.log("auth header: user login completed");
+            routeTo("/dashboard");
+          })
+          .catch((err: unknown) => {
+            console.log(`auth header: user login failed ${err}`);
+            popupError(err);
+          });
+      } else {
+        console.log("auth header: UID present, user information present");
+      }
+    } else {
+      console.log("auth header: UID absent, rerouting to auth");
       routeTo("/auth");
     }
-  }, [routeTo, currentUser]);
+    setLogoutLoading(false);
+  }, [authUserUid]);
 
   return (
     <div className="flex flex-wrap sm:flex-row gap-5 items-center justify-between bg-gradient-to-r from-myBlue to-myPink px-5 py-5 md:py-2 text-white drop-shadow-md">

@@ -66,47 +66,28 @@ export const BE_register = (
   }
 };
 
-export const BE_login = (
-  data: authDataType,
-  setLoading: setLoadingType,
-  reset: () => void,
-  routeTo: NavigateFunction,
-  dispatch: AppDispatch
-) => {
+export const BE_userLoginBegin = async (data: authDataType) => {
   const { email, password } = data;
 
   if (email && password) {
-    setLoading(true);
-    signInWithEmailAndPassword(auth, email, password)
-      .then(async (userCredential) => {
-        await updateUserInfo(userCredential.user.uid, { isOnline: true });
-        const userInfo = await getUserInfo(userCredential.user.uid);
-        dispatch(setUser(userInfo));
-
-        toastSucc("Login successful!");
-        setLoading(false);
-        reset();
-        routeTo("/dashboard");
-      })
-      .catch((error) => {
-        catchErr(error);
-        setLoading(false);
-      });
+    await signInWithEmailAndPassword(auth, email, password);
   } else {
-    toastErr("Fields shouldn't be left empty.");
+    throw Error("Fields shouldn't be left empty.");
   }
 };
 
-export const BE_logout = async (
-  user: userType,
-  setLoading: setLoadingType,
-  dispatch: AppDispatch,
-  routeTo: NavigateFunction
+export const BE_userLoginComplete = async (
+  uid: string,
+  dispatch: AppDispatch
 ) => {
-  setLoading(true);
-  dispatch(setUser(defaultUser));
+  await updateUserInfo(uid, { isOnline: true });
+  const userInfo = await getUserInfo(uid);
+  dispatch(setUser(userInfo));
+};
+
+export const BE_userLogout = async (uid: string) => {
   try {
-    await updateUserInfo(user.id, { isOnline: false });
+    await updateUserInfo(uid, { isOnline: false });
   } catch (error: unknown) {
     console.log(error);
   }
@@ -115,8 +96,6 @@ export const BE_logout = async (
   } catch (error: unknown) {
     console.log(error);
   }
-  setLoading(false);
-  routeTo("/auth");
 };
 
 const addUserToCollection = async (

@@ -1,5 +1,11 @@
 import { toast } from "react-toastify";
 
+export const popupError = (msg: unknown) => {
+  if (msg instanceof Error) {
+    toast.error(msg.message);
+  }
+};
+
 export const toastErr = (msg: string) => {
   toast.error(msg);
 };

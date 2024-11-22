@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { userType } from "../Types";
+import { User } from "@firebase/auth";
 
 export const USER_STORAGE_NAME = "zeus.user";
 
@@ -13,12 +14,15 @@ export const defaultUser: userType = {
 };
 
 export interface UserState {
+  authUserUid?: string;
+
   user: userType[];
   currentUser: userType;
   currentSelectedUser: userType | undefined;
 }
 
 const initialState: UserState = {
+  authUserUid: undefined,
   user: [],
   currentUser: defaultUser,
   currentSelectedUser: undefined,
@@ -28,6 +32,10 @@ export const userSlice = createSlice({
   name: "user",
   initialState: initialState,
   reducers: {
+    setAuthUserUid: (state, action) => {
+      state.authUserUid = action.payload;
+    },
+
     setUser: (state, action) => {
       const user = action.payload;
 
@@ -44,5 +52,5 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setUser, setUsers } = userSlice.actions;
+export const { setAuthUserUid, setUser, setUsers } = userSlice.actions;
 export default userSlice.reducer;

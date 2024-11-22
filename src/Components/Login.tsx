@@ -1,29 +1,65 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "./Input";
 import Button from "./Button";
-import { BE_register, BE_login } from "../Backend/Queries";
+import {
+  BE_register,
+  BE_userLoginBegin,
+  BE_userLoginComplete,
+} from "../Backend/Queries";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../Redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../Redux/store";
+import { popupError } from "../Utils/toast";
 
 const Login = () => {
+  const [loginLoading, setLoginLoading] = useState(false);
+
+  const authUserUid = useSelector((state: RootState) => state.user.authUserUid);
+  const dispatch = useDispatch<AppDispatch>();
+  const routeTo = useNavigate();
+
+  useEffect(() => {
+    if (authUserUid) {
+      console.log("auth login: UID present, completing login");
+      setLoginLoading(true);
+      BE_userLoginComplete(authUserUid, dispatch)
+        .then(() => {
+          console.log("auth login: user login completed");
+          setLoginLoading(false);
+          routeTo("/dashboard");
+        })
+        .catch((err: unknown) => {
+          console.log(`auth login: user login failed ${err}`);
+          popupError(err);
+          setLoginLoading(false);
+        });
+    } else {
+      setLoginLoading(false);
+      console.log("auth login: UID absent");
+      routeTo("/auth");
+    }
+  }, [authUserUid]);
+
   const [login, setLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [registerLoading, setRegisterLoading] = useState(false);
-  const [loginLoading, setLoginLoading] = useState(false);
-  const routeTo = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
 
   const handleRegister = () => {
     const data = { email, password, confirmPassword };
     BE_register(data, setRegisterLoading, reset, routeTo, dispatch);
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     const data = { email, password };
-    BE_login(data, setLoginLoading, reset, routeTo, dispatch);
+    setLoginLoading(true);
+    try {
+      BE_userLoginBegin(data);
+    } catch (err: unknown) {
+      popupError(err);
+      setLoginLoading(false);
+    }
   };
 
   const reset = () => {
