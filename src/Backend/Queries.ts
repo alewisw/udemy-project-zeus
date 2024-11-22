@@ -1,6 +1,7 @@
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signOut,
 } from "@firebase/auth";
 import { auth } from "./Firebase";
 import { toastErr, toastSucc } from "../Utils/toast";
@@ -15,7 +16,7 @@ import {
   updateDoc,
 } from "@firebase/firestore";
 import { db } from "../Backend/Firebase";
-import { defaultUser, setUser } from "../Redux/userSlice";
+import { defaultUser, setUser, USER_STORAGE_NAME } from "../Redux/userSlice";
 import { AppDispatch } from "../Redux/store";
 import convertTime from "../Utils/convertTime";
 import avatarGenerator from "../Utils/avatarGenerator";
@@ -94,6 +95,28 @@ export const BE_login = (
   } else {
     toastErr("Fields shouldn't be left empty.");
   }
+};
+
+export const BE_logout = async (
+  user: userType,
+  setLoading: setLoadingType,
+  dispatch: AppDispatch,
+  routeTo: NavigateFunction
+) => {
+  setLoading(true);
+  dispatch(setUser(defaultUser));
+  try {
+    await updateUserInfo(user.id, { isOnline: false });
+  } catch (error: unknown) {
+    console.log(error);
+  }
+  try {
+    await signOut(auth);
+  } catch (error: unknown) {
+    console.log(error);
+  }
+  setLoading(false);
+  routeTo("/auth");
 };
 
 const addUserToCollection = async (
