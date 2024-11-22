@@ -14,6 +14,7 @@ https://tailwindcss.com/
 https://redux-toolkit.js.org/
 https://www.npmjs.com/package/react-toastify
 https://momentjs.com/
+https://react-icons.github.io/react-icons/
 
 https://multiavatar.com/
 
